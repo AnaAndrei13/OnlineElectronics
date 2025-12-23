@@ -1,0 +1,187 @@
+.categories-dashboard {
+  max-width: 1000px;  /* sau 1100px, 1200px */
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+}
+
+.categories-dashboard h2 {
+  margin-bottom: 23px;
+  color: #333;
+  font-size: 25px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.categories-dashboard form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.categories-dashboard h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.categories-dashboard label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  color: #495057;
+  font-size: 14px;
+}
+
+.categories-dashboard input[type="text"] {
+  padding: 10px 14px;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.categories-dashboard input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Lista de categorii */
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.category-list li:hover {
+  background-color: #e9ecef;
+  border-left-color: #667eea;
+  transform: translateX(3px);
+}
+
+.category-list li span {
+  color: #495057;
+  font-size: 15px;
+  flex: 1;
+}
+
+/* Container pentru butoane în lista */
+.category-list li > div {
+  display: flex;
+  gap: 8px;
+}
+
+/* Butoane generice */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Buton ADD - MOV */
+.btn-add {
+  background-color: #667eea !important;
+  color: white;
+  padding: 10px 20px;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-add:hover {
+  background-color: #5568d3;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* Buton EDIT - PORTOCALIU */
+.btn-edit {
+  background-color: #ff9800;
+  color: white;
+  box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+}
+
+.btn-edit:hover {
+  background-color: #e68900;
+  box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
+}
+
+/* Buton DELETE - ROȘU */
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+  box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+}
+
+.btn-delete:hover {
+  background-color: #da190b;
+  box-shadow: 0 4px 10px rgba(244, 67, 54, 0.4);
+}
+
+/* Buton CANCEL - GRI */
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+  margin-left: 10px;
+  box-shadow: 0 2px 6px rgba(108, 117, 125, 0.3);
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+  box-shadow: 0 4px 10px rgba(108, 117, 125, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .categories-dashboard {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .category-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .category-list li > div {
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

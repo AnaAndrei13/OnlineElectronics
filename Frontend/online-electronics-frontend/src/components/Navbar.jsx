@@ -1,0 +1,59 @@
+import React, { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import {  FaShoppingCart, FaUser } from "react-icons/fa";
+import '../css/Navbar.css';
+
+
+const Navbar = () => {
+  const { token, role, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  return (
+    <nav className="navbar">
+     <div className="navbar-top">
+        <div className="navbar-logo">
+          <Link to="/">OnlineElectro</Link>
+        </div>
+
+        <div className="navbar-actions">
+          <button className="cart-btn"><FaShoppingCart /> </button>
+          
+          {token ? (
+          <>
+            <span className="user-role">{role}</span>
+              <Link 
+                to="/" 
+                onClick={handleLogout} 
+                className="logout-btn"
+              >   Logout
+              </Link>
+            <button className="user-btn"><FaUser /></button>
+         </>
+         ) : (
+         <>
+            <Link to="/login" className="login-btn">Login</Link>
+            <Link to="/register" className="register-btn">| Register</Link>
+            <button className="user-btn"><FaUser /></button>
+    </>
+  )}
+        </div>
+
+      </div>
+
+      <div className="navbar-links">
+        <Link to="/"> Home </Link>
+        <Link to="/products"> Shop </Link>
+        <Link to="/about">About </Link>
+      </div>
+
+    </nav>
+  );
+};
+
+export default Navbar;

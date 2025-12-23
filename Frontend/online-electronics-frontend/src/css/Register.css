@@ -1,0 +1,115 @@
+/* Register.css */
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f0f2f5;
+}
+
+.register-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 50px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+}
+
+/* Titlu */
+.register-card h2 {
+  margin-bottom: 35px;
+  color: #333;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* Formular */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.register-form .form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.register-form .form-group label {
+  margin-bottom: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #444;
+}
+
+.register-form .form-group input {
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 18px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.register-form .form-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+
+/* Buton Register */
+.register-form button {
+  padding: 15px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background-color: #764ba2; 
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  text-align: center;
+  display: block;
+}
+
+.register-form button:hover {
+  background-color: #713fa2; 
+  transform: scale(1.03);
+}
+
+/* Mesaje succes/eroare */
+.register-message {
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+}
+
+.register-message.success {
+  background-color: #28a745;
+}
+
+.register-message.error {
+  background-color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .register-card {
+    width: 90%;
+    padding: 40px 25px;
+  }
+
+  .register-form .form-group label,
+  .register-form .form-group input,
+  .register-form button {
+    font-size: 16px;
+  }
+}

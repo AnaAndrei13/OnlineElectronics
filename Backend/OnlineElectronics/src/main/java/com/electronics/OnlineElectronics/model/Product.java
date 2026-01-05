@@ -23,6 +23,8 @@ public class Product {
     @JsonBackReference
     private Category category;
 
+    public Product(){}
+
     public Long getId() {
         return id;
     }

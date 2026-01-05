@@ -15,6 +15,8 @@ public class User {
 
     private String role;
 
+    public User(){}
+
     public String getEmail(){
         return email;
     }

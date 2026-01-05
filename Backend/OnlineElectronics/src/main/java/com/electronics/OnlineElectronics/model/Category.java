@@ -7,11 +7,9 @@ import java.util.List;
 
 @Entity
 public class Category {
-
     @Id
     private String name;
     private String description;
-
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference

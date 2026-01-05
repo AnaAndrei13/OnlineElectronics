@@ -16,6 +16,6 @@ public interface IUserService {
     void deleteUser(Long id);
 
     User getUserByEmail(String email);
-    public boolean adminExists();
+    boolean adminExists();
     boolean existsByEmail(String email);
 }

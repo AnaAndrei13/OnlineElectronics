@@ -48,6 +48,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/wishlist/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/wishlist/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/wishlist/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/cart/**").permitAll()
+
                         // Role-based endpoints
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")

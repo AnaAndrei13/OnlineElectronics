@@ -52,6 +52,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/cart/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/cart/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/orders/**").permitAll()
 
                         // Role-based endpoints
                         .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")

@@ -1,6 +1,9 @@
+import axios from 'axios'; 
 import React, { useState, useEffect } from 'react';
 import ApiService from '../service/ApiService';
 import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 
 const ProductsCatalog = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +12,51 @@ const ProductsCatalog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [addingToWishlist, setAddingToWishlist] = useState({});  // for loading spinner
   const productsPerPage = 8;
+  const navigate = useNavigate();
+
+  const handleAddToWishlist = async (productId, e) => {
+    e.preventDefault();        // Prevents navigation when clicking the heart
+    e.stopPropagation();      // Stops click from triggering parent events
+    
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert('Please login first!');
+        navigate('/login');
+        return;
+      }
+
+      setAddingToWishlist(prev => ({ ...prev, [productId]: true }));
+     
+      // Send request to backend
+      const response = await axios.post(
+        `http://localhost:8080/api/wishlist/add/${productId}`,
+        null,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert('✅ Product added to wishlist!');
+      
+    } catch (error) {
+      console.error('❌ Error:', error);
+      
+      if (error.response?.status === 401) {
+        alert('Please login first!');
+        navigate('/login');
+      } else {
+        alert(`Error: ${error.response?.data || error.message}`);
+      }
+    } finally {
+      setAddingToWishlist(prev => ({ ...prev, [productId]: false }));
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -32,10 +79,12 @@ const ProductsCatalog = () => {
     loadData();
   }, []);
 
+  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, searchTerm]);
 
+  // Filter products by category + search term
   const filteredProducts = products.filter(product => {
     const matchCategory = selectedCategory === 'All' || product.categoryName === selectedCategory;
     const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -43,11 +92,13 @@ const ProductsCatalog = () => {
     return matchCategory && matchSearch;
   });
 
+  // Pagination calculations
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
+  // Go to a specific page
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -183,7 +234,9 @@ const ProductsCatalog = () => {
         flexWrap: 'wrap',
         gap: '10px'
       }}>
-        
+        <span>
+          Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+        </span>
         {totalPages > 1 && (
           <span>
             Page {currentPage} of {totalPages}
@@ -205,147 +258,206 @@ const ProductsCatalog = () => {
         <>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: '20px',
             marginBottom: '40px'
           }}>
             {currentProducts.map(product => (
               <Link 
-                  key={product.id} 
-                  to={`/products/${product.id}`} 
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-              <div
-                key={product.id}
-                style={{
-                  background: 'white',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative'
-                }}
+                key={product.id} 
+                to={`/products/${product.id}`} 
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                {product.stock < 10 && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    background: product.stock === 0 ? '#dc3545' : '#ff9800',
-                    color: 'white',
-                    padding: '4px 10px',
-                    borderRadius: '20px',
-                    fontSize: '0.75rem',
-                    fontWeight: '600',
-                    zIndex: 1
-                  }}>
-                    {product.stock === 0 ? 'Out of stock' : `Only ${product.stock} left`}
-                  </div>
-                )}
-
-                <div style={{
-                  width: '100%',
-                  height: '200px',
-                  overflow: 'hidden',
-                  backgroundColor: '#f5f5f5',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '10px'
-                }}>
-                  <img
-                    src={`http://localhost:8080${product.image}`}
-                    alt={product.name}
+                <div
+                  style={{
+                    background: 'white',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'relative',
+                    height: '100%'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+                  }}
+                >
+                  {/* Wishlist Button*/}
+                  <button
+                    onClick={(e) => handleAddToWishlist(product.id, e)}
+                    disabled={addingToWishlist[product.id]}
                     style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain'
+                      position: 'absolute',
+                      top: '10px',
+                      left: '10px',
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: addingToWishlist[product.id] ? 'not-allowed' : 'pointer',
+                      zIndex: 2,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                      transition: 'all 0.2s ease',
+                      fontSize: '1.2rem'
                     }}
-                    onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                    onMouseEnter={(e) => {
+                      if (!addingToWishlist[product.id]) {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.background = '#5f3a82';
+                      }
                     }}
-                  />
-                </div>
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.background = '#764ba2';
+                    }}
+                    title="Add to wishlist"
+                  >
+                    {addingToWishlist[product.id] ? '⏳' : '🤍'}
+                  </button>
 
-                <div style={{ padding: '14px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <span style={{
-                    display: 'inline-block',
-                    fontSize: '0.7rem',
-                    color: '#007bff',
-                    backgroundColor: '#e7f3ff',
-                    padding: '3px 8px',
-                    borderRadius: '4px',
-                    marginBottom: '6px',
-                    width: 'fit-content',
-                    fontWeight: '500'
-                  }}>
-                    {product.categoryName}
-                  </span>
-
-                  <h3 style={{
-                    fontSize: '0.95rem',
-                    fontWeight: '600',
-                    color: '#1a1a1a',
-                    marginBottom: '6px',
-                    lineHeight: '1.3',
-                    minHeight: '2.4rem'
-                  }}>
-                    {product.name}
-                  </h3>
-
-                  <p style={{
-                    fontSize: '0.8rem',
-                    color: '#666',
-                    marginBottom: '10px',
-                    lineHeight: '1.4',
-                    flex: 1
-                  }}>
-                    {product.description}
-                  </p>
+                  {product.stock < 10 && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      background: product.stock === 0 ? '#dc3545' : '#ff9800',
+                      color: 'white',
+                      padding: '4px 10px',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      zIndex: 1
+                    }}>
+                      {product.stock === 0 ? 'Out of stock' : `Only ${product.stock} left`}
+                    </div>
+                  )}
 
                   <div style={{
+                    width: '100%',
+                    height: '200px',
+                    overflow: 'hidden',
+                    backgroundColor: '#f5f5f5',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginTop: 'auto',
-                    paddingTop: '10px',
-                    borderTop: '1px solid #f0f0f0'
+                    justifyContent: 'center',
+                    padding: '10px'
                   }}>
-                    <div style={{
-                      fontSize: '1.3rem',
-                      fontWeight: '700',
-                      color: '#890f92ff'
-                    }}>
-                      {product.price.toFixed(2)} RON
-                    </div>
-                    
-                    <button
-                      disabled={product.stock === 0}
+                    <img
+                      src={`http://localhost:8080${product.image}`}
+                      alt={product.name}
                       style={{
-                        padding: '8px 16px',
-                        backgroundColor: product.stock === 0 ? '#ccc' : '#764ba2',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        fontSize: '0.85rem',
-                        fontWeight: '600',
-                        cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
-                        opacity: product.stock === 0 ? 0.6 : 1
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain'
                       }}
-                      onClick={() => {
-                        if (product.stock > 0) {
-                          alert(`Added "${product.name}" to cart!`);
-                        }
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
                       }}
-                    >
-                      {product.stock === 0 ? 'Unavailable' : 'Add to Cart'}
-                    </button>
+                    />
+                  </div>
+
+                  <div style={{ padding: '14px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <span style={{
+                      display: 'inline-block',
+                      fontSize: '0.7rem',
+                      color: '#007bff',
+                      backgroundColor: '#e7f3ff',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      marginBottom: '6px',
+                      width: 'fit-content',
+                      fontWeight: '500'
+                    }}>
+                      {product.categoryName}
+                    </span>
+
+                    <h3 style={{
+                      fontSize: '0.95rem',
+                      fontWeight: '600',
+                      color: '#1a1a1a',
+                      marginBottom: '6px',
+                      lineHeight: '1.3',
+                      minHeight: '2.4rem'
+                    }}>
+                      {product.name}
+                    </h3>
+
+                    <p style={{
+                      fontSize: '0.8rem',
+                      color: '#666',
+                      marginBottom: '10px',
+                      lineHeight: '1.4',
+                      flex: 1,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}>
+                      {product.description}
+                    </p>
+
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginTop: 'auto',
+                      paddingTop: '10px',
+                      borderTop: '1px solid #f0f0f0'
+                    }}>
+                      <div style={{
+                        fontSize: '1.3rem',
+                        fontWeight: '700',
+                        color: '#890f92ff'
+                      }}>
+                        {product.price.toFixed(2)} RON
+                      </div>
+                      
+                      <button
+                        disabled={product.stock === 0}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: product.stock === 0 ? '#ccc' : '#764ba2',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontSize: '0.85rem',
+                          fontWeight: '600',
+                          cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
+                          opacity: product.stock === 0 ? 0.6 : 1,
+                          transition: 'all 0.2s ease'
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (product.stock > 0) {
+                            alert(`Added "${product.name}" to cart!`);
+                          }
+                        }}
+                        onMouseEnter={(e) => {
+                          if (product.stock > 0) {
+                            e.currentTarget.style.backgroundColor = '#5f3a82';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#764ba2';
+                        }}
+                      >
+                        {product.stock === 0 ? 'Unavailable' : 'Add to Cart'}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
               </Link>
             ))}
           </div>

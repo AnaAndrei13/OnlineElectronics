@@ -89,6 +89,9 @@ static async deleteProduct(productId) {
   return response.data;
 }
 
+
 };
+
+
 
 export default ApiService;

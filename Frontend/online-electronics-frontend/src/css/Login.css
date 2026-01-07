@@ -16,7 +16,7 @@
   text-align: center;
 }
 
-/* Titlu */
+/* Title */
 .login-card h2 {
   margin-bottom: 35px;
   color: #333;
@@ -24,7 +24,7 @@
   font-weight: 700;
 }
 
-/* Formular */
+/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -58,13 +58,13 @@
   box-shadow: 0 0 5px rgba(0,123,255,0.5);
 }
 
-/* Buton login */
+
 .login-form button {
   padding: 15px;
-  width: 100%;             /* face butonul la fel lat ca input-ul */
+  width: 100%;            
   border: none;
   border-radius: 10px;
-  background-color: #764ba2; /* culoarea constantă */
+  background-color: #764ba2; 
   color: #fff;
   font-size: 18px;
   font-weight: 700;
@@ -75,12 +75,11 @@
 }
 
 .login-form button:hover {
-  background-color: #713fa2; /* doar pentru hover schimbă nuanța */
+  background-color: #713fa2; 
   transform: scale(1.03);
 }
 
 
-/* Mesaje succes/eroare */
 .login-message {
   margin-top: 25px;
   padding: 15px;

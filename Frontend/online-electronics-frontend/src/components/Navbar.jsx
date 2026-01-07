@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import {  FaShoppingCart, FaUser } from "react-icons/fa";
+import {  FaShoppingCart, FaUser, FaHeart } from "react-icons/fa";
 import '../css/Navbar.css';
 
 
@@ -22,8 +22,8 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-actions">
-          <button className="cart-btn"><FaShoppingCart /> </button>
-          
+          <button className="cart-btn" onClick={() => navigate("/cart")}><FaShoppingCart /> </button>
+          <button className="favorite-btn" onClick={() => navigate("/wishlist")}><FaHeart /> </button>
           {token ? (
           <>
             <span className="user-role">{role}</span>

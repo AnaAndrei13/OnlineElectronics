@@ -36,7 +36,7 @@ const ProductPage = () => {
       <div className="product-details">
         {product.image && (
           <img 
-            src={`http://localhost:8080${product.image}`}   /* 🔥 corect */
+            src={`http://localhost:8080${product.image}`}  
             alt={product.name} 
             className="product-image"
           />

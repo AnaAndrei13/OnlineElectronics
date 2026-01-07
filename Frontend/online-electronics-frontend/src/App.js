@@ -14,7 +14,7 @@ import ProductsCatalog from "./pages/ProductsCatalog";
 import AdminPage from "./admin/AdminPage"
 import  AdminRoute  from "./service/AdminRoute";
 import ProductPage from "./pages/ProductPage";
-
+import Wishlist from './pages/Wishlist';
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -27,6 +27,7 @@ function App() {
            <Route path="/products" element={<ProductsCatalog />} />
             <Route path="/products/:id" element={<ProductPage />} /> 
            <Route path="/about" element ={<About/>} />
+            <Route path="/wishlist/" element={<Wishlist />} />
           
         </Route>
 

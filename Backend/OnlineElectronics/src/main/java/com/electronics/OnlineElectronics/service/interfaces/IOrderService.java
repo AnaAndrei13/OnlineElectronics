@@ -11,4 +11,6 @@ public interface IOrderService {
     List<Order> getOrdersForUser(Long userId);
     Order getOrderById(Long orderId);
      Order updateOrderStatus(Long orderId, OrderStatus status);
+
+    boolean existsByStripeSessionId(String stripeSessionId);
 }

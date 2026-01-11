@@ -24,7 +24,7 @@ public class Order {
     private LocalDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-
+    private String stripeSessionId;
 
     public Order(){}
 
@@ -74,5 +74,13 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
     }
 }

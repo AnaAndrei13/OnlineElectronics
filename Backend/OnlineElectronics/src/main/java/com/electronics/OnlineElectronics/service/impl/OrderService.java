@@ -34,7 +34,7 @@ public class OrderService implements IOrderService {
         Order order = new Order();
         order.setUser(cart.getUser());
         order.setCreatedAt(LocalDateTime.now());
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.PAID);
 
         double total = 0;
 
@@ -83,4 +83,8 @@ public class OrderService implements IOrderService {
 
         order.setStatus(status);
         return orderRepository.save(order); }
+
+    public boolean existsByStripeSessionId(String sessionId) {
+        return orderRepository.existsByStripeSessionId(sessionId);
+    }
 }

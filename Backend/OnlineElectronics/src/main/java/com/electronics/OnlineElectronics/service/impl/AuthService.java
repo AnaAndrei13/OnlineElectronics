@@ -15,6 +15,7 @@ public class AuthService implements IAuthService {
     private final UserService userService;
     private final JwtService jwtService;
 
+
     public AuthService(AuthenticationManager authenticationManager,
                            UserService userService,
                            JwtService jwtService) {
@@ -22,6 +23,7 @@ public class AuthService implements IAuthService {
         this.userService = userService;
         this.jwtService = jwtService;
     }
+
 
     @Override
     public String login(String email, String password) {
@@ -35,8 +37,6 @@ public class AuthService implements IAuthService {
         return jwtService.generateToken(user.getEmail());
     }
 
-
-
     @Override
     public void register(UserRequest userRequest) {
         if (userService.existsByEmail(userRequest.getEmail())) {
@@ -47,6 +47,8 @@ public class AuthService implements IAuthService {
                 userRequest.getFirstName(),
                 userRequest.getLastName(),
                 userRequest.getEmail(),
+                userRequest.getPhoneNumber(),
+                userRequest.getAddress(),
                 userRequest.getPassword(),
                 "USER"
         );

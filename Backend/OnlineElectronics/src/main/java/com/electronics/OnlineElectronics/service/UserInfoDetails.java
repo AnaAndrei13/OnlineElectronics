@@ -1,34 +1,46 @@
 package com.electronics.OnlineElectronics.service;
 
-import com.electronics.OnlineElectronics.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 
 public class UserInfoDetails implements UserDetails {
 
-    private User user;
+    private Long id;
+    private String username;
+    @JsonIgnore
+    private String password;
 
-    public UserInfoDetails(User user) {
-        this.user = user;
+    private Collection<?extends GrantedAuthority> authorities;
+
+    public UserInfoDetails(Long id,String username,String password,Collection<?extends GrantedAuthority> authorities) {
+        this.id=id;
+        this.username = username;
+        this.password=password;
+        this.authorities=authorities;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole()));
-    }
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
+
+    public Long getId() {
+        return id;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Collection<?extends GrantedAuthority> getAuthorities(){
+        return authorities;
     }
 
     @Override
@@ -49,5 +61,18 @@ public class UserInfoDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o ){
+        if(this== o) return true;
+        if(o == null || getClass()!= o.getClass())  return false;
+        UserInfoDetails user=(UserInfoDetails) o;
+        return Objects.equals(id, user.id);
+
+    }
+    @Override
+    public int hashCode(){
+        return Objects.hash(id);
     }
 }

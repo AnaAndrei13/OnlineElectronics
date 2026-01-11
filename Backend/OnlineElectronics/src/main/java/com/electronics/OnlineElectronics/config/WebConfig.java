@@ -18,8 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
         if (!normalizedPath.endsWith("/") && !normalizedPath.endsWith("\\")) {
             normalizedPath = normalizedPath + "/";
         }
-
-        // Pe Windows trebuie file:/// (3 slash-uri)
         String fileLocation = "file:///" + normalizedPath;
 
         registry.addResourceHandler("/uploads/**")

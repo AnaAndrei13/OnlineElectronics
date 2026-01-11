@@ -1,22 +1,19 @@
 package com.electronics.OnlineElectronics.config;
-
 import com.electronics.OnlineElectronics.service.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -36,46 +33,55 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
+        System.out.println(" Authorization Header: " + authHeader);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            username = jwtService.extractEmail(token);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println(" No Bearer token found");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = authHeader.substring(7);
+        System.out.println(" Token extracted: " + token.substring(0, 20) + "...");
+
+        String username;
+
+        try {
+             username = jwtService.extractEmail(token);
+        } catch (Exception e) {
+            System.out.println("Token extraction failed: " + e.getMessage());
+            filterChain.doFilter(request, response);
+            return;
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // 1. Extragem rolul din token
-            String role = jwtService.extractRole(token);
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                System.out.println("UserDetails loaded: " + userDetails.getUsername());
 
-            // 2. Transformăm rolul în autoritate
-            List<SimpleGrantedAuthority> authorities =
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+                if (jwtService.validateJwtToken(token, userDetails)) {
+                    System.out.println(" Token is valid");
 
-            // 3. Construim Authentication din token, fără a mai apela UserDetailsService
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            username,
-                            null,
-                            authorities
-                    );
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
 
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    System.out.println("Authentication set in SecurityContext");
+                } else {
+                    System.out.println("Token validation failed");
+                }
+            } catch (Exception e) {
+                System.out.println(" Error loading user: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
 
         filterChain.doFilter(request, response);
     }
-
-
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-
-        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
-        }
-
-        return null;
-    }
 }
-

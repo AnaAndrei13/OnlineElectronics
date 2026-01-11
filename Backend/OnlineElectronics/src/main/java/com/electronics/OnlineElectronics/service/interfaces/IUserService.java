@@ -9,7 +9,7 @@ public interface IUserService {
 
     User getUserById(Long id);
 
-    void createUser(String firstName,String lastName,String email, String rawPassword, String role);
+    void createUser(String firstName,String lastName,String email,String phoneNumber, String address, String rawPassword, String role);
 
     User updateUser(Long id, User user);
 

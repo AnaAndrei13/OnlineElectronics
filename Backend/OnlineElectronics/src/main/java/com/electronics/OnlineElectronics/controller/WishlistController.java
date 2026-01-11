@@ -79,7 +79,6 @@ public class WishlistController {
              }
 
              String email = authentication.getName();
-             logger.info("Creating order for user: {}", email);
              User user= userService.getUserByEmail(email);
 
              if (user == null) {
@@ -91,7 +90,6 @@ public class WishlistController {
              return ResponseEntity.ok(wishlist);
 
          } catch (Exception e) {
-             logger.error("Error creating order: {}", e.getMessage(), e);
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                      .body("Error: " + e.getMessage());
          }
@@ -111,7 +109,6 @@ public class WishlistController {
              }
 
              String email = authentication.getName();
-             logger.info("Creating order for user: {}", email);
              User user= userService.getUserByEmail(email);
 
              if (user == null) {
@@ -124,7 +121,6 @@ public class WishlistController {
              return ResponseEntity.ok(wishlist);
 
          }catch(Exception e){
-             logger.error("Error creating order: {}", e.getMessage(), e);
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                      .body("Error: " + e.getMessage());
          }

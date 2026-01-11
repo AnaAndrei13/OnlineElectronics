@@ -36,11 +36,13 @@ public class UserService implements IUserService {
     }
 
 
-    public void createUser(String firstName,String lastName,String email, String rawPassword, String role) {
+    public void createUser(String firstName,String lastName,String email,String phoneNumber,String address, String rawPassword, String role) {
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
+        user.setPhoneNumber(phoneNumber);
+        user.setAddress(address);
         user.setPassword(passwordEncoder.encode(rawPassword)); // hash
         user.setRole(role);
         userRepository.save(user);

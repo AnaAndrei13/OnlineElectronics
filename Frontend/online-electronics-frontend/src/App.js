@@ -15,6 +15,9 @@ import AdminPage from "./admin/AdminPage"
 import  AdminRoute  from "./service/AdminRoute";
 import ProductPage from "./pages/ProductPage";
 import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart';
+import UserInfo from './pages/UserProfile';
+import OrderDashboard from './pages/OrderDashboard';
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -28,18 +31,21 @@ function App() {
             <Route path="/products/:id" element={<ProductPage />} /> 
            <Route path="/about" element ={<About/>} />
             <Route path="/wishlist/" element={<Wishlist />} />
-          
+            <Route path="/cart" element={<Cart/>} />
+            <Route path="/userinfo" element={<UserInfo />} />
         </Route>
 
         
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        
+
 
          {/* Just ADMIN*/}
         <Route path="/admin/categories" element={<CategoryDashboard />} />
         <Route path='/admin' element={<AdminRoute><AdminPage /></AdminRoute>} />
         <Route path="/admin/products" element={<ProductDashboard/>} />
-      
+        <Route path="/admin/orders" element={<OrderDashboard/>} />
       </Routes>
     </BrowserRouter>
   );

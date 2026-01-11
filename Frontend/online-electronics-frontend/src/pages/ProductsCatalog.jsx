@@ -13,6 +13,7 @@ const ProductsCatalog = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [addingToWishlist, setAddingToWishlist] = useState({});  // for loading spinner
+  const [addingToCart, setAddingToCart] = useState({}); 
   const productsPerPage = 8;
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ const ProductsCatalog = () => {
           }
         }
       );
-      alert('✅ Product added to wishlist!');
+   
       
     } catch (error) {
       console.error('❌ Error:', error);
@@ -57,6 +58,52 @@ const ProductsCatalog = () => {
       setAddingToWishlist(prev => ({ ...prev, [productId]: false }));
     }
   };
+
+   
+     
+  const handleAddToCart = async (productId, e) => {
+  e.preventDefault();        
+  e.stopPropagation();      
+  
+  try {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      alert('Please login first!');
+      navigate('/login');
+      return;
+    }
+
+    setAddingToCart(prev => ({ ...prev, [productId]: true }));
+   
+    // Send request to backend
+    const response = await axios.post(
+      `http://localhost:8080/api/cart/add/${productId}`,
+      null,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+    
+    if (error.response?.status === 401) {
+      alert('Please login first!');
+      navigate('/login');
+    } else if (error.response?.data?.message) {
+      alert(`Error: ${error.response.data.message}`);
+    } else {
+      alert(`Error: ${error.response?.data || error.message}`);
+    }
+  } finally {
+    setAddingToCart(prev => ({ ...prev, [productId]: false }));
+  }
+};
 
   useEffect(() => {
     const loadData = async () => {
@@ -425,35 +472,32 @@ const ProductsCatalog = () => {
                       </div>
                       
                       <button
-                        disabled={product.stock === 0}
-                        style={{
-                          padding: '8px 16px',
-                          backgroundColor: product.stock === 0 ? '#ccc' : '#764ba2',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '6px',
-                          fontSize: '0.85rem',
-                          fontWeight: '600',
-                          cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
-                          opacity: product.stock === 0 ? 0.6 : 1,
-                          transition: 'all 0.2s ease'
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (product.stock > 0) {
-                            alert(`Added "${product.name}" to cart!`);
-                          }
-                        }}
-                        onMouseEnter={(e) => {
-                          if (product.stock > 0) {
-                            e.currentTarget.style.backgroundColor = '#5f3a82';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = '#764ba2';
-                        }}
-                      >
-                        {product.stock === 0 ? 'Unavailable' : 'Add to Cart'}
+                          onClick={(e) => handleAddToCart(product.id, e)}
+                          disabled={product.stock === 0 || addingToCart[product.id]}
+                          style={{
+                            padding: '8px 16px',
+                            backgroundColor: product.stock === 0 ? '#ccc' : (addingToCart[product.id] ? '#9b6bb8' : '#764ba2'),
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '0.85rem',
+                            fontWeight: '600',
+                            cursor: (product.stock === 0 || addingToCart[product.id]) ? 'not-allowed' : 'pointer',
+                            opacity: product.stock === 0 ? 0.6 : 1,
+                            transition: 'all 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (product.stock > 0 && !addingToCart[product.id]) {
+                              e.currentTarget.style.backgroundColor = '#5f3a82';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!addingToCart[product.id]) {
+                              e.currentTarget.style.backgroundColor = '#764ba2';
+                            }
+                          }}
+                        >
+                          {addingToCart[product.id] ? '⏳ Adding...' : (product.stock === 0 ? 'Unavailable' : 'Add to Cart')}
                       </button>
                     </div>
                   </div>

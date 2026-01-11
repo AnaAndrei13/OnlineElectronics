@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <title>Checkout - Finalizare comandă</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .checkout-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #0570de;
+    }
+
+    #payment-element {
+      margin: 25px 0;
+    }
+
+    #payment-message {
+      color: #df1b41;
+      background: #fef0f0;
+      border: 1px solid #df1b41;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    #payment-message.hidden {
+      display: none;
+    }
+
+    #submit {
+      width: 100%;
+      background: #0570de;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #submit:hover:not(:disabled) {
+      background: #0051ba;
+    }
+
+    #submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .spinner.hidden {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .security-note {
+      text-align: center;
+      color: #999;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    .security-note svg {
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <h1>💳 Finalizare Plată</h1>
+    <p class="subtitle">Completează detaliile pentru a finaliza comanda</p>
+
+    <div id="payment-message" class="hidden"></div>
+
+    <form id="payment-form">
+      <!-- CÂMPURI PERSONALIZATE - Poți adăuga orice vrei aici -->
+      <div class="form-group">
+        <label for="email">Email (pentru confirmare)</label>
+        <input 
+          type="email" 
+          id="email" 
+          placeholder="nume@exemplu.ro"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="name">Nume complet</label>
+        <input 
+          type="text" 
+          id="name" 
+          placeholder="Ion Popescu"
+          required
+        />
+      </div>
+
+      <!-- STRIPE PAYMENT ELEMENT - injectat automat -->
+      <div id="payment-element"></div>
+
+      <!-- BUTON SUBMIT -->
+      <button id="submit">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Plătește acum</span>
+      </button>
+
+      
+    </form>
+  </div>
+
+  <script src="/Checkout.js"></script>
+</body>
+</html>

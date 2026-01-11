@@ -24,6 +24,7 @@ const Navbar = () => {
         <div className="navbar-actions">
           <button className="cart-btn" onClick={() => navigate("/cart")}><FaShoppingCart /> </button>
           <button className="favorite-btn" onClick={() => navigate("/wishlist")}><FaHeart /> </button>
+           <button className="user-btn"onClick={() => navigate("/userinfo")}><FaUser /></button>
           {token ? (
           <>
             <span className="user-role">{role}</span>
@@ -33,13 +34,13 @@ const Navbar = () => {
                 className="logout-btn"
               >   Logout
               </Link>
-            <button className="user-btn"><FaUser /></button>
+           
          </>
          ) : (
          <>
             <Link to="/login" className="login-btn">Login</Link>
             <Link to="/register" className="register-btn">| Register</Link>
-            <button className="user-btn"><FaUser /></button>
+           
     </>
   )}
         </div>

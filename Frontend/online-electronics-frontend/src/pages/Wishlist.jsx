@@ -62,7 +62,7 @@ const Wishlist = () => {
         items: wishlist.items.filter(item => item.product.id !== productId)
       });
       
-      alert('✅ Product removed from wishlist!');
+     
       
     } catch (err) {
       alert(`Error: ${err.response?.data || err.message}`);

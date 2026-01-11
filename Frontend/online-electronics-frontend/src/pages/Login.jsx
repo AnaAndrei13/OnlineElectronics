@@ -19,9 +19,9 @@ export default function Login() {
     const success = await loginUser(email, password);
 
     if (success) {
-      // Așteaptă puțin ca role-ul să se actualizeze în context
+      // wait
       setTimeout(() => {
-        // Citește rolul din localStorage (mai sigur imediat după login)
+    
         const userRole = localStorage.getItem('role');
         
         console.log('User role after login:', userRole);
@@ -49,7 +49,7 @@ export default function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Introdu email-ul"
+              placeholder="Enter email"
             />
           </div>
 
@@ -59,7 +59,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Introdu parola"
+              placeholder="Enter password"
             />
           </div>
 
